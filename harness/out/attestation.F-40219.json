@@ -1,0 +1,86 @@
+{
+  "attestation_version": "1.0",
+  "finding": {
+    "id": "F-40219",
+    "cve": "CVE-2020-14343",
+    "service": "report-worker",
+    "package": "PyYAML",
+    "installed_version": "5.3.1",
+    "fixed_version": "5.4"
+  },
+  "provenance": {
+    "proposer": "dependency-update",
+    "agent": "recorded fixture (no model call)",
+    "target_version": "5.4",
+    "reverification": {
+      "installed_version": "5.3.1",
+      "db_fixed_version": "5.4",
+      "notes": [
+        "scanner severity 'high', database severity 'critical'"
+      ],
+      "still_vulnerable": true,
+      "advisory": "GHSA-8q59-q68h-6hv4"
+    }
+  },
+  "gate_decision": {
+    "pr": "dep-pyyaml-5.4",
+    "base_sha": "7d57275",
+    "diff_sha256": "a4c2cf6e340270186bacd2f4437107d67f8cb75da2ec50d8be0bb2999b9e7b64",
+    "rubric_version": "0.4.0",
+    "rubric_sha256": "aab00c9fe606c9ff72d6a900da48b9b5435abee1a12570f3e199f7ca1b937b39",
+    "outcome": "review",
+    "score": 100,
+    "lowered_by": [
+      "S1_registered_sensitive_area",
+      "score 100 >= 20"
+    ],
+    "decided_at": "2026-11-16T14:00:00Z",
+    "record_sha256": "1afb24462c2c59ea10b19ee3883cad71e8a1e03e8256f36875cc20bc7c322e3f"
+  },
+  "approval": {
+    "required": true,
+    "required_from": "team-platform",
+    "approver": "sso:a.reviewer",
+    "approver_team": "team-platform",
+    "approved_at": "2026-11-16T16:40:00Z",
+    "source": "github pull request review 2291840113"
+  },
+  "change": {
+    "pr": "https://github.com/example/homework/pull/42",
+    "merge_commit": "9c1e7a4",
+    "merged_at": "2026-11-16T16:52:10Z",
+    "merged_diff_sha256": "a4c2cf6e340270186bacd2f4437107d67f8cb75da2ec50d8be0bb2999b9e7b64",
+    "base_sha_at_merge": "7d57275"
+  },
+  "build": {
+    "ci_run": "https://github.com/example/homework/actions/runs/1187",
+    "ci_result": "success",
+    "excluded_tests_at_build": [],
+    "artifact_digest": "sha256:4be1d0c7a2f95e66d3a1b7c9e0f2a4d6b8c0e1f3a5b7c9d1e3f5a7b9c1d3e5f7",
+    "sbom_digest": "sha256:a7f3c2e19b4d5f60718293a4b5c6d7e8f9011223344556677889900aabbccdde",
+    "sbom_package_version": {
+      "PyYAML": "5.4"
+    }
+  },
+  "deployment": {
+    "environment": "production",
+    "deploy_id": "deploy-2026-11-16-0031",
+    "image_digest": "sha256:4be1d0c7a2f95e66d3a1b7c9e0f2a4d6b8c0e1f3a5b7c9d1e3f5a7b9c1d3e5f7",
+    "completed_at": "2026-11-16T17:20:44Z"
+  },
+  "runtime_verification": {
+    "checked_at": "2026-11-17T09:00:00Z",
+    "method": "cluster inventory of running image digests, joined to the SBOM for each digest",
+    "running_digests": [
+      "sha256:4be1d0c7a2f95e66d3a1b7c9e0f2a4d6b8c0e1f3a5b7c9d1e3f5a7b9c1d3e5f7"
+    ],
+    "instances_with_vulnerable_version": 0,
+    "previous_vulnerable_digests_running": 0,
+    "rescan": {
+      "scanner": "internal-composition-scan",
+      "finding_status": "resolved"
+    }
+  },
+  "remediated_in_production_at": "2026-11-17T09:00:00Z",
+  "not_remediated_because": []
+}

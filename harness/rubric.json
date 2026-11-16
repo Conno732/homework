@@ -1,0 +1,352 @@
+{
+  "_comment": "The gate's rubric. Scores a pull request, nothing else. It does not know which workflow (or person) opened the PR, and proposer rationale / PR description are not scoring inputs. Two kinds of check: static (a script in harness/checks/, deterministic) and llm_judge (a question answered by the judge using tools.json). Every check runs on every PR (no short-circuit). Each check can only lower the outcome, and an unknown result (judge disagreement, unverifiable citation, missing data, a crashed check) is treated exactly like a fail: a failed gate -> reject, a fired trigger -> at most review, score >= threshold -> at most review. Final outcome = lowest tier produced (reject < review < approve). Every decision records rubric_version and the sha of this file.",
+  "rubric_version": "0.4.0",
+  "inputs": {
+    "scored": [
+      "PR diff",
+      "repository at the base commit",
+      "sensitivity.json",
+      "owners.json",
+      "vulnerability database"
+    ],
+    "not_scored": [
+      "PR author",
+      "PR title/description",
+      "proposer rationale",
+      "linked finding or issue"
+    ],
+    "_comment": "Not-scored inputs may be shown to a human reviewer and used to link evidence, but cannot change the outcome."
+  },
+  "outcomes": {
+    "approve": "The gate's decision is the approval for this exact diff on this base commit. Both required checks pass; the PR can merge after green CI with no human approval.",
+    "review": "The 'approval' check stays red until a person approves the current commit. The PR carries the decision record.",
+    "reject": "The 'gate' check fails. Only a recorded owner override (identity + reason, logged) can merge it. Automated proposers must not retry around a reject."
+  },
+  "file_classes": {
+    "manifest": [
+      "**/pom.xml",
+      "**/build.gradle*",
+      "**/requirements*.lock",
+      "**/requirements*.txt",
+      "**/pyproject.toml",
+      "**/poetry.lock",
+      "**/package.json",
+      "**/package-lock.json"
+    ],
+    "tests": [
+      "**/src/test/**",
+      "**/tests/**",
+      "**/test_*.py",
+      "**/*_test.py",
+      "**/conftest.py"
+    ],
+    "docs": [
+      "**/*.md",
+      "docs/**"
+    ],
+    "pipeline": [
+      ".github/**",
+      "**/Jenkinsfile",
+      "**/.gitlab-ci.yml"
+    ],
+    "source": [
+      "**/*"
+    ],
+    "_comment": "First match wins, in order: manifest, tests, docs, pipeline, source. Checks declare which classes they apply to."
+  },
+  "judge": {
+    "rollouts": 3,
+    "min_agreement": 1.0,
+    "on_disagreement": "unknown",
+    "require_evidence": true,
+    "on_invalid_evidence": "unknown",
+    "_comment": "Each llm_judge rule's prompt is a markdown file under harness/prompts/ with fail/pass criteria, examples, and counterexamples. The model sees _judge.md, then the check's prompt, then the diff and the tools granted to that check (python -m harness.judge --show <check id>). It answers pass, fail, or unknown with cited evidence. Each check runs N times; anything short of unanimous, or any unverifiable citation, becomes unknown, which counts as fail.",
+    "llm_exposure": {
+      "allowed": [
+        "in-org repository content",
+        "harness-computed structured facts"
+      ],
+      "forbidden": [
+        "third-party source code",
+        "upstream release notes / changelogs",
+        "advisory / CVE prose",
+        "package READMEs"
+      ],
+      "_comment": "Enforced by construction: the judge can only call tools in tools.json, and tools.json contains only tools that return in-org content or harness-computed facts."
+    },
+    "system_prompt": "prompts/_judge.md"
+  },
+  "gates": [
+    {
+      "id": "G1_weakens_verification",
+      "description": "Diff disables, skips, excludes, or deletes existing tests. Adding or strengthening tests is fine.",
+      "type": "static",
+      "script": "checks/weakens_tests.py",
+      "params": {
+        "added_line_patterns": [
+          "<exclude>",
+          "@Disabled",
+          "@Ignore",
+          "pytest.mark.skip",
+          "pytest.mark.xfail",
+          "unittest.skip"
+        ],
+        "detect_deleted_tests": true,
+        "detect_removed_assertions": true
+      },
+      "applies_to": [
+        "manifest",
+        "tests",
+        "source"
+      ]
+    },
+    {
+      "id": "G2_secret_in_diff",
+      "description": "Diff adds a credential value anywhere (code, config, docs, CI).",
+      "type": "static",
+      "script": "checks/secret_scan.py",
+      "applies_to": [
+        "*"
+      ]
+    },
+    {
+      "id": "G3_ships_known_vulnerable_version",
+      "description": "For any dependency the diff changes, the resolved version after the change has a known vulnerability at or above the org's blocking severity.",
+      "type": "static",
+      "script": "checks/vulnerable_version.py",
+      "data_sources": [
+        "dependency tree (base, head)",
+        "vulnerability database"
+      ],
+      "params": {
+        "blocking_severity": "high"
+      },
+      "applies_to": [
+        "manifest"
+      ]
+    },
+    {
+      "id": "G4_doc_grants_automation_privilege",
+      "description": "Added doc text tells automated tools they may skip review, disable tests, or handle credentials. Docs cannot grant authority.",
+      "type": "llm_judge",
+      "prompt": "prompts/G4_doc_grants_automation_privilege.md",
+      "tools": [
+        "get_pr_diff"
+      ],
+      "applies_to": [
+        "docs"
+      ]
+    }
+  ],
+  "forced_review": {
+    "_comment": "A fired trigger caps the outcome at review regardless of score. Not scored, so a low score can never auto-merge a change to sensitive areas.",
+    "triggers": [
+      {
+        "id": "S1_registered_sensitive_area",
+        "description": "Diff touches, or a changed dependency is used by, a path tagged in the sensitivity registry (money, pii, auth, credentials, tenant_input, policy).",
+        "type": "static",
+        "script": "checks/sensitive_area.py",
+        "data_sources": [
+          "harness/sensitivity.json",
+          "usage index"
+        ],
+        "applies_to": [
+          "*"
+        ]
+      },
+      {
+        "id": "S2_unregistered_sensitive_area",
+        "description": "Catches sensitive code the registry hasn't tagged yet. The judge can add forced review; it cannot clear S1.",
+        "type": "llm_judge",
+        "prompt": "prompts/S2_unregistered_sensitive_area.md",
+        "tools": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "applies_to": [
+          "manifest",
+          "source"
+        ],
+        "_note": "A fail also opens a registry PR to tag the path, so the next decision is deterministic."
+      },
+      {
+        "id": "S3_changes_procedure",
+        "description": "Doc change alters a step someone would follow.",
+        "type": "llm_judge",
+        "prompt": "prompts/S3_changes_procedure.md",
+        "tools": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "applies_to": [
+          "docs"
+        ]
+      }
+    ]
+  },
+  "scoring": {
+    "review_threshold": 20,
+    "_comment": "score < review_threshold -> approve; otherwise review. Weights are starting values ordered by principle: weakened verification > behavior change > blast radius > hygiene. Tune from reviewer-overturn and incident data.",
+    "checks": [
+      {
+        "id": "D1_not_direct_dependency",
+        "description": "Changed package is transitive or version-managed by a parent/BOM. Overriding it decouples it from what the framework was tested against.",
+        "type": "static",
+        "script": "checks/dependency_relationship.py",
+        "data_sources": [
+          "dependency tree (base)"
+        ],
+        "params": {
+          "fires_when": [
+            "transitive",
+            "parent_managed"
+          ]
+        },
+        "applies_to": [
+          "manifest"
+        ],
+        "weight": 20
+      },
+      {
+        "id": "D2_major_version_jump",
+        "description": "A changed dependency crosses a major version boundary.",
+        "type": "static",
+        "script": "checks/major_version_jump.py",
+        "data_sources": [
+          "dependency tree (base, head)"
+        ],
+        "params": {
+          "level": "major"
+        },
+        "applies_to": [
+          "manifest"
+        ],
+        "weight": 20
+      },
+      {
+        "id": "D3_related_test_excluded",
+        "description": "A test exercising changed code, or call sites of a changed dependency, is currently excluded or skipped. Green CI says nothing about that code.",
+        "type": "static",
+        "script": "checks/related_test_excluded.py",
+        "data_sources": [
+          "usage index",
+          "test index",
+          "build config excludes"
+        ],
+        "applies_to": [
+          "manifest",
+          "source"
+        ],
+        "weight": 30
+      },
+      {
+        "id": "D4_large_change",
+        "description": "Weak signal on its own: non-generated changed lines exceed the limit. Size is never sufficient to approve; sensitivity and behavior checks dominate.",
+        "type": "static",
+        "script": "checks/large_change.py",
+        "params": {
+          "max_lines": 300,
+          "exclude_globs": [
+            "**/*.lock",
+            "**/package-lock.json"
+          ]
+        },
+        "applies_to": [
+          "source",
+          "tests"
+        ],
+        "weight": 10
+      },
+      {
+        "id": "D5_no_active_owner",
+        "description": "Service has no owner in harness/owners.json (only the fallback applies). If nobody owns it, nobody notices when a gate-approved change breaks it.",
+        "type": "static",
+        "script": "checks/owner_resolved.py",
+        "data_sources": [
+          "harness/owners.json"
+        ],
+        "applies_to": [
+          "*"
+        ],
+        "weight": 10
+      },
+      {
+        "id": "Q1_relied_on_behavior_changes",
+        "description": "Behavior that other code depends on changes.",
+        "type": "llm_judge",
+        "prompt": "prompts/Q1_relied_on_behavior_changes.md",
+        "tools": [
+          "get_pr_diff",
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "applies_to": [
+          "manifest",
+          "source"
+        ],
+        "weight": 30
+      },
+      {
+        "id": "Q2_changed_behavior_untested",
+        "description": "The behavior the change could affect is not asserted on by an active test.",
+        "type": "llm_judge",
+        "prompt": "prompts/Q2_changed_behavior_untested.md",
+        "tools": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "applies_to": [
+          "manifest",
+          "source"
+        ],
+        "weight": 25
+      },
+      {
+        "id": "Q3_request_path_or_external_input",
+        "description": "Blast radius: request-serving / high-throughput path, or input from outside the service.",
+        "type": "llm_judge",
+        "prompt": "prompts/Q3_request_path_or_external_input.md",
+        "tools": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "applies_to": [
+          "manifest",
+          "source"
+        ],
+        "weight": 15
+      },
+      {
+        "id": "Q4_requires_coordinated_change",
+        "description": "Correct only if something outside this diff also changes (other services, config files in buckets, data migrations, deploy order).",
+        "type": "llm_judge",
+        "prompt": "prompts/Q4_requires_coordinated_change.md",
+        "tools": [
+          "get_pr_diff",
+          "find_usages",
+          "read_file",
+          "grep",
+          "api_diff"
+        ],
+        "applies_to": [
+          "manifest",
+          "source"
+        ],
+        "weight": 20
+      }
+    ]
+  },
+  "outcome_resolution": {
+    "order": [
+      "reject",
+      "review",
+      "approve"
+    ],
+    "rule": "min over all check results",
+    "short_circuit": false
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "doc-contributing-token-claim",
+  "title": "CONTRIBUTING: remove false CI token claim",
+  "description": "ci.yml contains no token, so the instruction to refresh it is wrong.",
+  "proposer": "doc-drift",
+  "linked_finding": null,
+  "service": null
+}

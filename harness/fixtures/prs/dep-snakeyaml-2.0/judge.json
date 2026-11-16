@@ -1,0 +1,271 @@
+{
+  "S2_unregistered_sensitive_area": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "27",
+            "contains": "return yaml.load(in);"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "Call sites parse YAML config; no money, PII, or auth."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "27",
+            "contains": "return yaml.load(in);"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "Call sites parse YAML config; no money, PII, or auth."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "27",
+            "contains": "return yaml.load(in);"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "Call sites parse YAML config; no money, PII, or auth."
+      }
+    ]
+  },
+  "Q1_relied_on_behavior_changes": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+            "lines": "15",
+            "contains": "Newer parser versions reject global tags by default"
+          },
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "23",
+            "contains": "Returns whatever the document's tag resolves to"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "loadOverrides relies on global tags; an in-org test documents that newer versions reject them."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+            "lines": "15",
+            "contains": "Newer parser versions reject global tags by default"
+          },
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "23",
+            "contains": "Returns whatever the document's tag resolves to"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "loadOverrides relies on global tags; an in-org test documents that newer versions reject them."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+            "lines": "15",
+            "contains": "Newer parser versions reject global tags by default"
+          },
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "23",
+            "contains": "Returns whatever the document's tag resolves to"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "loadOverrides relies on global tags; an in-org test documents that newer versions reject them."
+      }
+    ]
+  },
+  "Q2_changed_behavior_untested": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/pom.xml",
+            "lines": "59",
+            "contains": "<exclude>**/ConfigLoaderIntegrationTest.java</exclude>"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "The only test of tagged overrides is excluded from the build."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/pom.xml",
+            "lines": "59",
+            "contains": "<exclude>**/ConfigLoaderIntegrationTest.java</exclude>"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "The only test of tagged overrides is excluded from the build."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/pom.xml",
+            "lines": "59",
+            "contains": "<exclude>**/ConfigLoaderIntegrationTest.java</exclude>"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "The only test of tagged overrides is excluded from the build."
+      }
+    ]
+  },
+  "Q3_request_path_or_external_input": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "23",
+            "contains": "Operator-supplied override"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "loadOverrides parses operator-supplied files."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "23",
+            "contains": "Operator-supplied override"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "loadOverrides parses operator-supplied files."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+            "lines": "23",
+            "contains": "Operator-supplied override"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "loadOverrides parses operator-supplied files."
+      }
+    ]
+  },
+  "Q4_requires_coordinated_change": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/LegacyOverride.java",
+            "lines": "7",
+            "contains": "deserialized straight into this class"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Existing tagged override files in the tenant bucket would stop parsing."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/LegacyOverride.java",
+            "lines": "7",
+            "contains": "deserialized straight into this class"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Existing tagged override files in the tenant bucket would stop parsing."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/LegacyOverride.java",
+            "lines": "7",
+            "contains": "deserialized straight into this class"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Existing tagged override files in the tenant bucket would stop parsing."
+      }
+    ]
+  }
+}

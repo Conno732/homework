@@ -1,0 +1,7 @@
+{
+  "PyYAML": ["^\\s*(?:import|from)\\s+yaml\\b"],
+  "jinja2": ["^\\s*(?:import|from)\\s+jinja2\\b"],
+  "requests": ["^\\s*(?:import|from)\\s+requests\\b"],
+  "org.yaml:snakeyaml": ["^\\s*import\\s+org\\.yaml\\.snakeyaml\\."],
+  "commons-collections:commons-collections": ["^\\s*import\\s+org\\.apache\\.commons\\.collections\\."]
+}

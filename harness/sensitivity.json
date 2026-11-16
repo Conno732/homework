@@ -1,0 +1,36 @@
+{
+  "_comment": "Sensitivity registry. Owned by security/platform, not by service teams' prose docs. Code tagged here forces human review for any change that touches it or any dependency it uses, regardless of risk score. Untagged code can still be flagged by judge check S2.",
+  "registry_version": "0.1.0",
+  "domains": {
+    "money": "Pricing, billing, payments, quotes, anything that computes or moves an amount.",
+    "pii": "Personal data about users or customers.",
+    "auth": "Authentication, authorization, session or token handling.",
+    "credentials": "Secrets, keys, service accounts, CI credentials.",
+    "tenant_input": "Code that parses data supplied by tenants or operators (override files, uploads).",
+    "policy": "CI/CD definitions, contribution policy, runbooks, ownership. People and pipelines act on these, so changes are policy changes."
+  },
+  "entries": [
+    {
+      "service": "inventory-api",
+      "paths": ["src/main/java/com/example/inventory/PricingService.java"],
+      "domains": ["money"],
+      "note": "Tie-break behavior relied on by the quoting service; no tests."
+    },
+    {
+      "service": "inventory-api",
+      "paths": ["src/main/java/com/example/inventory/ConfigLoader.java", "src/main/java/com/example/inventory/LegacyOverride.java"],
+      "domains": ["tenant_input"]
+    },
+    {
+      "service": "report-worker",
+      "paths": ["report_worker/config.py"],
+      "domains": ["tenant_input"]
+    },
+    {
+      "service": "*",
+      "paths": [".github/**", "harness/**", "CONTRIBUTING.md", "SECURITY.md", "CODEOWNERS", "docs/runbook*"],
+      "domains": ["policy"],
+      "note": "Pipeline definitions and process/ops docs."
+    }
+  ]
+}

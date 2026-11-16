@@ -1,0 +1,160 @@
+{
+  "_comment": "Tools an LLM can call: the gate's judge or a proposer's agent. Everything here is read-only and returns in-org content or structured harness-computed facts; nothing returns content from outside the org (third-party source, release notes, advisory prose). Static checks are not tools: they are scripts in harness/checks/, referenced from rubric.json.",
+  "tools_version": "0.2.0",
+  "tools": [
+    {
+      "name": "get_finding",
+      "description": "Return a single finding from the findings feed by id.",
+      "params": {
+        "finding_id": "string"
+      },
+      "returns": "Finding object (cve, severity, service, package, installed_version, fixed_version, path, notes).",
+      "used_by": [
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "scanner_data"
+    },
+    {
+      "name": "get_pr_diff",
+      "description": "Unified diff of a pull request against its base commit, with changed paths and their file classes. Does not return title, description, or author.",
+      "params": {
+        "pr": "string"
+      },
+      "returns": "{ base_sha, head_sha, diff_sha256, changed_paths: { path, file_class }[], diff: string }",
+      "used_by": [
+        "judge"
+      ],
+      "side_effects": "none",
+      "output_trust": "pr_content"
+    },
+    {
+      "name": "read_file",
+      "description": "Read a file from the repository at the base commit. Optional line range.",
+      "params": {
+        "path": "string",
+        "start_line": "int?",
+        "end_line": "int?"
+      },
+      "returns": "File contents with line numbers.",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "repo_content",
+      "denied_paths": [
+        "**/node_modules/**",
+        "**/site-packages/**",
+        "**/.venv/**",
+        "**/target/**",
+        "**/vendor/**",
+        "**/build/**"
+      ]
+    },
+    {
+      "name": "grep",
+      "description": "Search the repository for a regex, optionally restricted by glob.",
+      "params": {
+        "pattern": "string",
+        "glob": "string?"
+      },
+      "returns": "Matches as { file, line, text }[].",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "repo_content",
+      "denied_paths": [
+        "**/node_modules/**",
+        "**/site-packages/**",
+        "**/.venv/**",
+        "**/target/**",
+        "**/vendor/**",
+        "**/build/**"
+      ]
+    },
+    {
+      "name": "dependency_tree",
+      "description": "Resolved dependency tree for a service (mvn dependency:tree / pip resolution). Shows whether a package is direct, transitive, or managed by a parent/BOM.",
+      "params": {
+        "service": "string"
+      },
+      "returns": "Tree of { package, version, scope, introduced_by, managed_by }.",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "harness_computed"
+    },
+    {
+      "name": "api_diff",
+      "description": "Structured public-API diff of a package between two versions, computed by the harness from published artifacts (e.g. japicmp for JVM, signature introspection for Python). Returns facts only: no upstream prose, docstrings, or comments.",
+      "params": {
+        "package": "string",
+        "from_version": "string",
+        "to_version": "string"
+      },
+      "returns": "{ removed: symbol[], signature_changed: {symbol, before, after}[], added: symbol[] }",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "harness_computed"
+    },
+    {
+      "name": "find_usages",
+      "description": "Locate call sites / imports of a package or symbol in non-test source.",
+      "params": {
+        "symbol": "string",
+        "service": "string"
+      },
+      "returns": "{ file, line, enclosing_symbol }[]",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "harness_computed",
+      "denied_paths": [
+        "**/node_modules/**",
+        "**/site-packages/**",
+        "**/.venv/**",
+        "**/target/**",
+        "**/vendor/**",
+        "**/build/**"
+      ]
+    },
+    {
+      "name": "find_tests_for",
+      "description": "Tests that exercise a given file or symbol (by import/reference analysis; coverage data when available).",
+      "params": {
+        "target": "string"
+      },
+      "returns": "{ test_file, test_name, excluded: bool }[]",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "harness_computed"
+    },
+    {
+      "name": "list_excluded_tests",
+      "description": "Tests excluded or skipped by build configuration (surefire <excludes>, @Disabled, pytest skip markers).",
+      "params": {
+        "service": "string"
+      },
+      "returns": "{ test, mechanism, location, reason_comment }[]",
+      "used_by": [
+        "judge",
+        "proposer"
+      ],
+      "side_effects": "none",
+      "output_trust": "harness_computed"
+    }
+  ]
+}

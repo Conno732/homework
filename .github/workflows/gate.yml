@@ -1,0 +1,134 @@
+name: gate
+
+# Scores every pull request against harness/rubric.json and enforces the result
+# with GitHub's own machinery. Nothing here merges anything.
+#
+# How it is meant to be enforced (branch protection / ruleset on main):
+#   - required status checks: "gate" and "approval"
+#   - merge queue enabled, so both re-run on the merge group (PR + latest main)
+#   - proposers (or people) enable auto-merge; GitHub merges when checks pass
+#
+#   outcome   gate job   approval job
+#   approve   pass       pass (the gate's decision is the approval)
+#   review    pass       pass only once a person has approved the current commit
+#   reject    fail       -
+#
+# EXERCISE COMPROMISE: the gate lives in the same repo as the code it scores.
+# The intended design is a separate, human-reviewed repo enforced as an org
+# required workflow (see DESIGN.md, "Pipeline: GitHub Actions"). To limit the
+# damage here, the job checks out the BASE commit and runs the harness from
+# there, so the gate code and rubric that score a PR are ones already on the
+# target branch, and the PR's own content is only read as a diff. This workflow
+# file itself still comes from the PR.
+#
+# No judge is configured (no LLM calls, zero cost), so every LLM-judge check is
+# "unknown" and fails closed: code and dependency PRs land in REVIEW at best.
+#
+# NOT YET RUN ON GITHUB.
+
+on:
+  pull_request:
+  pull_request_review:
+    types: [submitted, dismissed]
+  merge_group:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  # On a merge group, "base" is main plus every PR queued ahead of this one.
+  BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+  HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+jobs:
+  harness-tests:
+    if: github.event_name != 'pull_request_review'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: unit tests (standard library only)
+        run: python -m unittest discover -s harness/tests -t .
+
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      outcome: ${{ steps.decide.outputs.outcome }}
+    steps:
+      - name: check out the base commit (the rules and the code being changed)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BASE_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: fetch the proposed head as data
+        run: git fetch --no-tags origin "${HEAD_SHA}"
+      - name: decide
+        id: decide
+        run: |
+          # Three dots: only the PR's own changes. If the PR branch is behind the
+          # base and the diff no longer applies, the gate rejects (fail closed)
+          # until the branch is updated.
+          git diff --no-color "${BASE_SHA}...${HEAD_SHA}" > "${RUNNER_TEMP}/change.diff"
+          set +e
+          python -m harness.run --diff "${RUNNER_TEMP}/change.diff" --base-sha "${BASE_SHA}" > "${RUNNER_TEMP}/decision.json"
+          status=$?
+          set -e
+          outcome=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['outcome'])" "${RUNNER_TEMP}/decision.json")
+          echo "outcome=${outcome}" >> "${GITHUB_OUTPUT}"
+          {
+            echo "## Gate decision: ${outcome}"
+            echo '```json'
+            python -c "import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({k: d[k] for k in ('outcome','score','lowered_by')}, indent=2))" "${RUNNER_TEMP}/decision.json"
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
+          exit "${status}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gate-decision
+          path: ${{ runner.temp }}/decision.json
+
+  approval:
+    # Turns the gate's three outcomes into something a required check can express.
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: require a human approval only when the gate says review
+        env:
+          OUTCOME: ${{ needs.gate.outputs.outcome }}
+          EVENT: ${{ github.event_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${OUTCOME}" = "approve" ]; then
+            echo "Gate approved: no human approval needed."; exit 0
+          fi
+          if [ "${EVENT}" = "merge_group" ]; then
+            # The PR could only enter the queue with this check green, and a
+            # stale approval can't follow it here: the gate just re-scored it.
+            echo "Gate says review on the merge group; approval was given on the PR."; exit 0
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/reviews" --paginate > reviews.json
+          approved=$(python -c "import json,os,sys; print(sum(1 for r in json.load(open('reviews.json')) if r['state']=='APPROVED' and r['commit_id']==os.environ['HEAD_SHA']))")
+          if [ "${approved}" -gt 0 ]; then
+            echo "Gate says review; ${approved} approval(s) on ${HEAD_SHA}."; exit 0
+          fi
+          # A fuller version would also require the approver to be in the owning
+          # team from harness/owners.json (e.g. via CODEOWNERS).
+          echo "Gate says review: waiting for an approval on ${HEAD_SHA}."; exit 1
+
+  notify:
+    needs: gate
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: escalate (stub)
+        env:
+          OUTCOME: ${{ needs.gate.outputs.outcome }}
+        run: echo "Gate outcome '${OUTCOME}'. A real job would match harness/owners.json escalation rules and post to Slack."

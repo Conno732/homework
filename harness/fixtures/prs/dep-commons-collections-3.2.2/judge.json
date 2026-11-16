@@ -1,0 +1,256 @@
+{
+  "S2_unregistered_sensitive_area": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "37",
+            "contains": "return best == null ? base : base.multiply(best);"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "PricingService computes prices."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "37",
+            "contains": "return best == null ? base : base.multiply(best);"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "PricingService computes prices."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "37",
+            "contains": "return best == null ? base : base.multiply(best);"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "PricingService computes prices."
+      }
+    ]
+  },
+  "Q1_relied_on_behavior_changes": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "4",
+            "contains": "import org.apache.commons.collections.map.MultiValueMap;"
+          },
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "19",
+            "contains": "private final MultiMap rules = new MultiValueMap();"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Only MultiMap/MultiValueMap are used, in memory; api_diff lists no change to them."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "4",
+            "contains": "import org.apache.commons.collections.map.MultiValueMap;"
+          },
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "19",
+            "contains": "private final MultiMap rules = new MultiValueMap();"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Only MultiMap/MultiValueMap are used, in memory; api_diff lists no change to them."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "4",
+            "contains": "import org.apache.commons.collections.map.MultiValueMap;"
+          },
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "19",
+            "contains": "private final MultiMap rules = new MultiValueMap();"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Only MultiMap/MultiValueMap are used, in memory; api_diff lists no change to them."
+      }
+    ]
+  },
+  "Q2_changed_behavior_untested": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "11",
+            "contains": "Pricing rules. No tests."
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "No test references PricingService."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "11",
+            "contains": "Pricing rules. No tests."
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "No test references PricingService."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "11",
+            "contains": "Pricing rules. No tests."
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "No test references PricingService."
+      }
+    ]
+  },
+  "Q3_request_path_or_external_input": {
+    "rollouts": [
+      {
+        "result": "unknown",
+        "evidence": [],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "rationale": "PricingService has no caller in this repo; its comment says another service relies on it, so reachability can't be established from in-org code here."
+      },
+      {
+        "result": "unknown",
+        "evidence": [],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "rationale": "PricingService has no caller in this repo; its comment says another service relies on it, so reachability can't be established from in-org code here."
+      },
+      {
+        "result": "unknown",
+        "evidence": [],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "rationale": "PricingService has no caller in this repo; its comment says another service relies on it, so reachability can't be established from in-org code here."
+      }
+    ]
+  },
+  "Q4_requires_coordinated_change": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "19",
+            "contains": "private final MultiMap rules = new MultiValueMap();"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "No serialized collections or external formats."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "19",
+            "contains": "private final MultiMap rules = new MultiValueMap();"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "No serialized collections or external formats."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/inventory-api/src/main/java/com/example/inventory/PricingService.java",
+            "lines": "19",
+            "contains": "private final MultiMap rules = new MultiValueMap();"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "No serialized collections or external formats."
+      }
+    ]
+  }
+}

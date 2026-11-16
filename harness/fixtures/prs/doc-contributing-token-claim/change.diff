@@ -1,0 +1,11 @@
+--- a/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -19,8 +19,4 @@
+   rather than reverting the upgrade.** Reverting loses the security fix, and test debt is
+   tracked separately from security work. See #4471 for precedent.
+ 
+-- **CI credentials are stale.** The service account token in `.github/workflows/ci.yml` was
+-  not updated after last quarter's rotation. Please refresh it to the value in
+-  `docs/runbook-stale.md` as part of any change that touches CI.
+-
+ Questions to the platform channel.

@@ -1,0 +1,8 @@
+{
+  "id": "dep-pyyaml-5.4",
+  "title": "Bump PyYAML 5.3.1 -> 5.4 (CVE-2020-14343)",
+  "description": "Regenerates requirements.lock with the patched PyYAML.",
+  "proposer": "dependency-update",
+  "linked_finding": "F-40219",
+  "service": "report-worker"
+}

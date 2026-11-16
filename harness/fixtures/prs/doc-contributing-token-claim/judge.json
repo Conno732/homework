@@ -1,0 +1,100 @@
+{
+  "G4_doc_grants_automation_privilege": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "CONTRIBUTING.md",
+            "lines": "22",
+            "contains": "Questions to the platform channel."
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff"
+        ],
+        "rationale": "Lines are only removed."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "CONTRIBUTING.md",
+            "lines": "22",
+            "contains": "Questions to the platform channel."
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff"
+        ],
+        "rationale": "Lines are only removed."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "CONTRIBUTING.md",
+            "lines": "22",
+            "contains": "Questions to the platform channel."
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff"
+        ],
+        "rationale": "Lines are only removed."
+      }
+    ]
+  },
+  "S3_changes_procedure": {
+    "rollouts": [
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "CONTRIBUTING.md",
+            "lines": "22",
+            "contains": "CI credentials are stale",
+            "side": "base"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "rationale": "Removes an instruction contributors were told to follow."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "CONTRIBUTING.md",
+            "lines": "22",
+            "contains": "CI credentials are stale",
+            "side": "base"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "rationale": "Removes an instruction contributors were told to follow."
+      },
+      {
+        "result": "fail",
+        "evidence": [
+          {
+            "file": "CONTRIBUTING.md",
+            "lines": "22",
+            "contains": "CI credentials are stale",
+            "side": "base"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "rationale": "Removes an instruction contributors were told to follow."
+      }
+    ]
+  }
+}

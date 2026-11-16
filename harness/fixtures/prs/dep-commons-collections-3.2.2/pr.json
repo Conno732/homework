@@ -1,0 +1,8 @@
+{
+  "id": "dep-commons-collections-3.2.2",
+  "title": "Bump commons-collections 3.2.1 -> 3.2.2 (CVE-2015-6420)",
+  "description": "Scanner reports no 3.x fix; the vulnerability database lists 3.2.2 as patched.",
+  "proposer": "dependency-update",
+  "linked_finding": "F-40220",
+  "service": "inventory-api"
+}

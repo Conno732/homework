@@ -1,0 +1,34 @@
+{
+  "_comment": "Stand-in for a vulnerability database. These three entries were copied from the public GitHub Advisory Database on 2026-11-16 (api.github.com/advisories?cve_id=...). Only static check scripts and the proposer's re-verification read this; advisory prose is never shown to an LLM.",
+  "source": "GitHub Advisory Database",
+  "recorded_at": "2026-11-16",
+  "advisories": [
+    {
+      "id": "GHSA-8q59-q68h-6hv4",
+      "cve": "CVE-2020-14343",
+      "ecosystem": "pip",
+      "package": "PyYAML",
+      "vulnerable_range": "< 5.4",
+      "fixed_in": "5.4",
+      "severity": "critical"
+    },
+    {
+      "id": "GHSA-mjmj-j48q-9wg2",
+      "cve": "CVE-2022-1471",
+      "ecosystem": "maven",
+      "package": "org.yaml:snakeyaml",
+      "vulnerable_range": "<= 1.33",
+      "fixed_in": "2.0",
+      "severity": "high"
+    },
+    {
+      "id": "GHSA-6hgm-866r-3cjv",
+      "cve": "CVE-2015-6420",
+      "ecosystem": "maven",
+      "package": "commons-collections:commons-collections",
+      "vulnerable_range": "< 3.2.2",
+      "fixed_in": "3.2.2",
+      "severity": "high"
+    }
+  ]
+}

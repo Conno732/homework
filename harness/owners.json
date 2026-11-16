@@ -1,0 +1,36 @@
+{
+  "_comment": "Stub ownership + escalation config. The source of truth for who owns a service and where alerts go; prose docs (runbooks, READMEs) naming owners are not used. Values below are placeholders. Escalation is the 'notify' job in gate.yml (needs: gate, if: always()): it posts to Slack when any rule matches, and never changes the gate's outcome.",
+  "owners_version": "0.1.0",
+
+  "services": {
+    "inventory-api": {
+      "owner": "team-inventory",
+      "slack_channel": "#inventory-alerts"
+    },
+    "report-worker": {
+      "owner": null,
+      "slack_channel": null,
+      "_note": "Unowned since the platform migration (the runbook's owner and channel are dead). Resolves to fallback; D5 fires."
+    }
+  },
+
+  "fallback": {
+    "owner": "team-platform",
+    "slack_channel": "#platform-oncall",
+    "_note": "Used when a service has no owner or no channel. Also always copied on escalations for unowned services."
+  },
+
+  "escalation_rules": [
+    { "id": "E1_sensitive_area", "when": { "sensitivity_domains_any": ["money", "pii", "auth", "credentials", "policy"] } },
+    { "id": "E2_gate_reject", "when": { "outcome": ["reject"] } },
+    { "id": "E3_critical_or_overdue_finding", "when": { "linked_finding_severity": ["critical"], "or_sla_days_remaining_lte": 7 } },
+    { "id": "E4_unowned_service", "when": { "owner_resolved": false } },
+    { "id": "E5_owner_override_used", "when": { "override": true } }
+  ],
+
+  "notification": {
+    "targets": "service slack_channel, or fallback.slack_channel if unset",
+    "message_includes": ["PR link", "gate outcome", "matched escalation rule ids", "fired checks with evidence links"],
+    "delivery": "best-effort; a failed post is logged and retried but does not block or change the merge decision"
+  }
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "channel": "#inventory-alerts",
+    "pr": "dep-snakeyaml-2.0",
+    "outcome": "review",
+    "escalation_rules": [
+      "E3_critical_or_overdue_finding"
+    ],
+    "fired_checks": [
+      "S1_registered_sensitive_area",
+      "D1_not_direct_dependency",
+      "D2_major_version_jump",
+      "D3_related_test_excluded",
+      "Q1_relied_on_behavior_changes",
+      "Q2_changed_behavior_untested",
+      "Q3_request_path_or_external_input",
+      "Q4_requires_coordinated_change"
+    ],
+    "finding": "F-40218"
+  },
+  {
+    "channel": "#platform-oncall",
+    "pr": "dep-pyyaml-5.4",
+    "outcome": "review",
+    "escalation_rules": [
+      "E4_unowned_service"
+    ],
+    "fired_checks": [
+      "S1_registered_sensitive_area",
+      "D5_no_active_owner",
+      "Q1_relied_on_behavior_changes",
+      "Q2_changed_behavior_untested",
+      "Q3_request_path_or_external_input",
+      "Q4_requires_coordinated_change"
+    ],
+    "finding": "F-40219"
+  },
+  {
+    "channel": "#inventory-alerts",
+    "pr": "dep-commons-collections-3.2.2",
+    "outcome": "review",
+    "escalation_rules": [
+      "E1_sensitive_area",
+      "E3_critical_or_overdue_finding"
+    ],
+    "fired_checks": [
+      "S1_registered_sensitive_area",
+      "S2_unregistered_sensitive_area",
+      "Q2_changed_behavior_untested",
+      "Q3_request_path_or_external_input"
+    ],
+    "finding": "F-40220"
+  }
+]

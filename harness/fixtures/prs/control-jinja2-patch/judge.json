@@ -1,0 +1,259 @@
+{
+  "S2_unregistered_sensitive_area": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "7",
+            "contains": "TEMPLATE = Template("
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "Renders SKU and quantity rows; no money, PII, or auth."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "7",
+            "contains": "TEMPLATE = Template("
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "Renders SKU and quantity rows; no money, PII, or auth."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "7",
+            "contains": "TEMPLATE = Template("
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file"
+        ],
+        "rationale": "Renders SKU and quantity rows; no money, PII, or auth."
+      }
+    ]
+  },
+  "Q1_relied_on_behavior_changes": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "5",
+            "contains": "from jinja2 import Template"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Only Template(...) and .render() are used; api_diff lists no change to either."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "5",
+            "contains": "from jinja2 import Template"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Only Template(...) and .render() are used; api_diff lists no change to either."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "5",
+            "contains": "from jinja2 import Template"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Only Template(...) and .render() are used; api_diff lists no change to either."
+      }
+    ]
+  },
+  "Q2_changed_behavior_untested": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/tests/test_config.py",
+            "lines": "7",
+            "contains": "assert \"SKU-1001: 42\" in out"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "test_render_includes_tenant asserts on the rendered output."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/tests/test_config.py",
+            "lines": "7",
+            "contains": "assert \"SKU-1001: 42\" in out"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "test_render_includes_tenant asserts on the rendered output."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/tests/test_config.py",
+            "lines": "7",
+            "contains": "assert \"SKU-1001: 42\" in out"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "find_tests_for",
+          "read_file"
+        ],
+        "rationale": "test_render_includes_tenant asserts on the rendered output."
+      }
+    ]
+  },
+  "Q3_request_path_or_external_input": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "13",
+            "contains": "def render(tenant: str, rows: list[dict]) -> str:"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "rationale": "render() has no caller outside tests in this repo, and the template is a constant."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "13",
+            "contains": "def render(tenant: str, rows: list[dict]) -> str:"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "rationale": "render() has no caller outside tests in this repo, and the template is a constant."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "13",
+            "contains": "def render(tenant: str, rows: list[dict]) -> str:"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "grep"
+        ],
+        "rationale": "render() has no caller outside tests in this repo, and the template is a constant."
+      }
+    ]
+  },
+  "Q4_requires_coordinated_change": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "14",
+            "contains": "return TEMPLATE.render(tenant=tenant, rows=rows)"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Output format is unchanged."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "14",
+            "contains": "return TEMPLATE.render(tenant=tenant, rows=rows)"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Output format is unchanged."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "services/report-worker/report_worker/render.py",
+            "lines": "14",
+            "contains": "return TEMPLATE.render(tenant=tenant, rows=rows)"
+          }
+        ],
+        "tool_calls": [
+          "find_usages",
+          "read_file",
+          "api_diff"
+        ],
+        "rationale": "Output format is unchanged."
+      }
+    ]
+  }
+}

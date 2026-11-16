@@ -1,0 +1,8 @@
+{
+  "id": "dep-snakeyaml-2.0",
+  "title": "Override snakeyaml to 2.0 (CVE-2022-1471)",
+  "description": "Sets snakeyaml.version to override the version managed by the Spring Boot parent.",
+  "proposer": "dependency-update",
+  "linked_finding": "F-40218",
+  "service": "inventory-api"
+}

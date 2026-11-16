@@ -1,0 +1,259 @@
+{
+  "record_version": "1.0",
+  "pr": {
+    "id": "doc-contributing-token-claim",
+    "base_sha": "7d57275",
+    "diff_sha256": "1d6937f9a4b120a34d4d3ea886b5ccd176baaecff918db8cffff439295a596f6",
+    "changed_paths": [
+      {
+        "path": "CONTRIBUTING.md",
+        "file_class": "docs"
+      }
+    ],
+    "services": []
+  },
+  "rubric": {
+    "version": "0.4.0",
+    "sha256": "aab00c9fe606c9ff72d6a900da48b9b5435abee1a12570f3e199f7ca1b937b39"
+  },
+  "registries": {
+    "sensitivity": "d811c1ef514c3a8ca40f2adcfee16eef7aa9c899376ba209fb76d65c5edc6a6d",
+    "owners": "9181a5ba0cb81be474e86a4e373f29fce88f5f483d9a2c2f4021088384555f47",
+    "tools": "f74a2fd0b45aade90d0ea3da7e93e795269a55f6cae0621ab8e4df64bdf5dcfd",
+    "prompts": "a1503b61816e7953df88083e93cfd5da72a4b3daa6f7cc78222fba3303303f87"
+  },
+  "decided_at": "2026-11-16T14:00:00Z",
+  "results": [
+    {
+      "id": "G1_weakens_verification",
+      "kind": "gate",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, tests, source"
+    },
+    {
+      "id": "G2_secret_in_diff",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 possible secret(s) added",
+      "evidence": []
+    },
+    {
+      "id": "G3_ships_known_vulnerable_version",
+      "kind": "gate",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest"
+    },
+    {
+      "id": "G4_doc_grants_automation_privilege",
+      "kind": "gate",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "CONTRIBUTING.md",
+          "lines": "22",
+          "contains": "Questions to the platform channel.",
+          "verified": true
+        },
+        {
+          "file": "CONTRIBUTING.md",
+          "lines": "22",
+          "contains": "Questions to the platform channel.",
+          "verified": true
+        },
+        {
+          "file": "CONTRIBUTING.md",
+          "lines": "22",
+          "contains": "Questions to the platform channel.",
+          "verified": true
+        }
+      ],
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "20ba7872fde29623eba40d66a652f840e558db6b2e93e21d283f06c764d94e9e"
+    },
+    {
+      "id": "S1_registered_sensitive_area",
+      "kind": "trigger",
+      "type": "static",
+      "status": "fired",
+      "counted": true,
+      "effect": "review",
+      "detail": "sensitive domains: policy",
+      "evidence": [
+        {
+          "file": "CONTRIBUTING.md",
+          "domains": [
+            "policy"
+          ],
+          "why": "changed directly"
+        }
+      ]
+    },
+    {
+      "id": "S2_unregistered_sensitive_area",
+      "kind": "trigger",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, source"
+    },
+    {
+      "id": "S3_changes_procedure",
+      "kind": "trigger",
+      "type": "llm_judge",
+      "status": "fired",
+      "counted": true,
+      "effect": "review",
+      "detail": "judge answered 'fail' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "CONTRIBUTING.md",
+          "lines": "22",
+          "contains": "CI credentials are stale",
+          "side": "base",
+          "verified": true
+        },
+        {
+          "file": "CONTRIBUTING.md",
+          "lines": "22",
+          "contains": "CI credentials are stale",
+          "side": "base",
+          "verified": true
+        },
+        {
+          "file": "CONTRIBUTING.md",
+          "lines": "22",
+          "contains": "CI credentials are stale",
+          "side": "base",
+          "verified": true
+        }
+      ],
+      "rollouts": [
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        }
+      ],
+      "prompt_sha256": "49ec232506b9b83df3944f97dc575917defa943df623f5e3aacaf5fc75dca8c6"
+    },
+    {
+      "id": "D1_not_direct_dependency",
+      "kind": "scored",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest"
+    },
+    {
+      "id": "D2_major_version_jump",
+      "kind": "scored",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest"
+    },
+    {
+      "id": "D3_related_test_excluded",
+      "kind": "scored",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, source"
+    },
+    {
+      "id": "D4_large_change",
+      "kind": "scored",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in source, tests"
+    },
+    {
+      "id": "D5_no_active_owner",
+      "kind": "scored",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 unowned area(s)",
+      "evidence": [],
+      "weight": 10
+    },
+    {
+      "id": "Q1_relied_on_behavior_changes",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, source"
+    },
+    {
+      "id": "Q2_changed_behavior_untested",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, source"
+    },
+    {
+      "id": "Q3_request_path_or_external_input",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, source"
+    },
+    {
+      "id": "Q4_requires_coordinated_change",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in manifest, source"
+    }
+  ],
+  "score": 0,
+  "review_threshold": 20,
+  "outcome": "review",
+  "lowered_by": [
+    "S1_registered_sensitive_area",
+    "S3_changes_procedure"
+  ],
+  "record_sha256": "dace96ecda420f65ab05f3c871317ce7870c314b537bc926baae608c5f9a3376"
+}

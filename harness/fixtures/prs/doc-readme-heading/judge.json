@@ -1,0 +1,97 @@
+{
+  "G4_doc_grants_automation_privilege": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "README.md",
+            "lines": "15",
+            "contains": "## Running the tests"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff"
+        ],
+        "rationale": "A heading rename."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "README.md",
+            "lines": "15",
+            "contains": "## Running the tests"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff"
+        ],
+        "rationale": "A heading rename."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "README.md",
+            "lines": "15",
+            "contains": "## Running the tests"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff"
+        ],
+        "rationale": "A heading rename."
+      }
+    ]
+  },
+  "S3_changes_procedure": {
+    "rollouts": [
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "README.md",
+            "lines": "15",
+            "contains": "## Running the tests"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "rationale": "No step changes."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "README.md",
+            "lines": "15",
+            "contains": "## Running the tests"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "rationale": "No step changes."
+      },
+      {
+        "result": "pass",
+        "evidence": [
+          {
+            "file": "README.md",
+            "lines": "15",
+            "contains": "## Running the tests"
+          }
+        ],
+        "tool_calls": [
+          "get_pr_diff",
+          "read_file"
+        ],
+        "rationale": "No step changes."
+      }
+    ]
+  }
+}

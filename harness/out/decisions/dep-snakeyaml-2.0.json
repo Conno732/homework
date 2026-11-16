@@ -1,0 +1,406 @@
+{
+  "record_version": "1.0",
+  "pr": {
+    "id": "dep-snakeyaml-2.0",
+    "base_sha": "7d57275",
+    "diff_sha256": "47e097e4e367bab396549ebcd2a80ba7e22517f4cff552b9d5ae4e619233130c",
+    "changed_paths": [
+      {
+        "path": "services/inventory-api/pom.xml",
+        "file_class": "manifest"
+      }
+    ],
+    "services": [
+      "inventory-api"
+    ]
+  },
+  "rubric": {
+    "version": "0.4.0",
+    "sha256": "aab00c9fe606c9ff72d6a900da48b9b5435abee1a12570f3e199f7ca1b937b39"
+  },
+  "registries": {
+    "sensitivity": "d811c1ef514c3a8ca40f2adcfee16eef7aa9c899376ba209fb76d65c5edc6a6d",
+    "owners": "9181a5ba0cb81be474e86a4e373f29fce88f5f483d9a2c2f4021088384555f47",
+    "tools": "f74a2fd0b45aade90d0ea3da7e93e795269a55f6cae0621ab8e4df64bdf5dcfd",
+    "prompts": "a1503b61816e7953df88083e93cfd5da72a4b3daa6f7cc78222fba3303303f87"
+  },
+  "decided_at": "2026-11-16T14:00:00Z",
+  "results": [
+    {
+      "id": "G1_weakens_verification",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 test-weakening change(s)",
+      "evidence": []
+    },
+    {
+      "id": "G2_secret_in_diff",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 possible secret(s) added",
+      "evidence": []
+    },
+    {
+      "id": "G3_ships_known_vulnerable_version",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 changed package(s) still vulnerable",
+      "evidence": []
+    },
+    {
+      "id": "G4_doc_grants_automation_privilege",
+      "kind": "gate",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in docs"
+    },
+    {
+      "id": "S1_registered_sensitive_area",
+      "kind": "trigger",
+      "type": "static",
+      "status": "fired",
+      "counted": true,
+      "effect": "review",
+      "detail": "sensitive domains: tenant_input",
+      "evidence": [
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "line": 3,
+          "domains": [
+            "tenant_input"
+          ],
+          "why": "uses changed dependency org.yaml:snakeyaml"
+        }
+      ]
+    },
+    {
+      "id": "S2_unregistered_sensitive_area",
+      "kind": "trigger",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "27",
+          "contains": "return yaml.load(in);",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "27",
+          "contains": "return yaml.load(in);",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "27",
+          "contains": "return yaml.load(in);",
+          "verified": true
+        }
+      ],
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "cc50560d4ee8a661eb411b178fc3552a6c445d086629499cc398b31e1bef5e08"
+    },
+    {
+      "id": "S3_changes_procedure",
+      "kind": "trigger",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in docs"
+    },
+    {
+      "id": "D1_not_direct_dependency",
+      "kind": "scored",
+      "type": "static",
+      "status": "fired",
+      "counted": true,
+      "effect": "+20",
+      "detail": "1 non-direct dependency change(s)",
+      "evidence": [
+        {
+          "service": "inventory-api",
+          "package": "org.yaml:snakeyaml",
+          "relationship": "transitive"
+        }
+      ],
+      "weight": 20
+    },
+    {
+      "id": "D2_major_version_jump",
+      "kind": "scored",
+      "type": "static",
+      "status": "fired",
+      "counted": true,
+      "effect": "+20",
+      "detail": "1 major version jump(s)",
+      "evidence": [
+        {
+          "service": "inventory-api",
+          "package": "org.yaml:snakeyaml",
+          "from": "1.30",
+          "to": "2.0"
+        }
+      ],
+      "weight": 20
+    },
+    {
+      "id": "D3_related_test_excluded",
+      "kind": "scored",
+      "type": "static",
+      "status": "fired",
+      "counted": true,
+      "effect": "+30",
+      "detail": "1 related test(s) excluded",
+      "evidence": [
+        {
+          "affected_file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "test": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+          "mechanism": "surefire exclude",
+          "location": "services/inventory-api/pom.xml",
+          "pattern": "**/ConfigLoaderIntegrationTest.java"
+        }
+      ],
+      "weight": 30
+    },
+    {
+      "id": "D4_large_change",
+      "kind": "scored",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in source, tests"
+    },
+    {
+      "id": "D5_no_active_owner",
+      "kind": "scored",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 unowned area(s)",
+      "evidence": [],
+      "weight": 10
+    },
+    {
+      "id": "Q1_relied_on_behavior_changes",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "fired",
+      "counted": true,
+      "effect": "+30",
+      "detail": "judge answered 'fail' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+          "lines": "15",
+          "contains": "Newer parser versions reject global tags by default",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "23",
+          "contains": "Returns whatever the document's tag resolves to",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+          "lines": "15",
+          "contains": "Newer parser versions reject global tags by default",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "23",
+          "contains": "Returns whatever the document's tag resolves to",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/test/java/com/example/inventory/ConfigLoaderIntegrationTest.java",
+          "lines": "15",
+          "contains": "Newer parser versions reject global tags by default",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "23",
+          "contains": "Returns whatever the document's tag resolves to",
+          "verified": true
+        }
+      ],
+      "weight": 30,
+      "rollouts": [
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        }
+      ],
+      "prompt_sha256": "0b69467069022206fc49b250aeeb18270d992f34e99fb0a6b462794cc1add889"
+    },
+    {
+      "id": "Q2_changed_behavior_untested",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "fired",
+      "counted": true,
+      "effect": "+25",
+      "detail": "judge answered 'fail' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/inventory-api/pom.xml",
+          "lines": "59",
+          "contains": "<exclude>**/ConfigLoaderIntegrationTest.java</exclude>",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/pom.xml",
+          "lines": "59",
+          "contains": "<exclude>**/ConfigLoaderIntegrationTest.java</exclude>",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/pom.xml",
+          "lines": "59",
+          "contains": "<exclude>**/ConfigLoaderIntegrationTest.java</exclude>",
+          "verified": true
+        }
+      ],
+      "weight": 25,
+      "rollouts": [
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        }
+      ],
+      "prompt_sha256": "370bfa27dd252b85122702a5a9fa9362b1b56f4041749f801c7297e58330d0c4"
+    },
+    {
+      "id": "Q3_request_path_or_external_input",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "fired",
+      "counted": true,
+      "effect": "+15",
+      "detail": "judge answered 'fail' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "23",
+          "contains": "Operator-supplied override",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "23",
+          "contains": "Operator-supplied override",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/ConfigLoader.java",
+          "lines": "23",
+          "contains": "Operator-supplied override",
+          "verified": true
+        }
+      ],
+      "weight": 15,
+      "rollouts": [
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        }
+      ],
+      "prompt_sha256": "58b2ef123a62ca4e79804af0d6d873b5c404a94118e27787c895a9d04c931dc0"
+    },
+    {
+      "id": "Q4_requires_coordinated_change",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "fired",
+      "counted": true,
+      "effect": "+20",
+      "detail": "judge answered 'fail' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/LegacyOverride.java",
+          "lines": "7",
+          "contains": "deserialized straight into this class",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/LegacyOverride.java",
+          "lines": "7",
+          "contains": "deserialized straight into this class",
+          "verified": true
+        },
+        {
+          "file": "services/inventory-api/src/main/java/com/example/inventory/LegacyOverride.java",
+          "lines": "7",
+          "contains": "deserialized straight into this class",
+          "verified": true
+        }
+      ],
+      "weight": 20,
+      "rollouts": [
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        },
+        {
+          "result": "fail"
+        }
+      ],
+      "prompt_sha256": "876d9cc4b95b0f621affab581dc2ee9e141f0c548afa3c4d6d1cdf8a4b57d71c"
+    }
+  ],
+  "score": 160,
+  "review_threshold": 20,
+  "outcome": "review",
+  "lowered_by": [
+    "S1_registered_sensitive_area",
+    "score 160 >= 20"
+  ],
+  "record_sha256": "1d8c45135373a5a28236c3f0331d2d2a78d84a0770b0836d0177f4a2bf038c76"
+}

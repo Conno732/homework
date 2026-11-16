@@ -1,0 +1,38 @@
+{
+  "_comment": "Mocked records from systems this exercise doesn't have: PR approval, merge, CI build, deploy, and the runtime-verification job. In production each block is written by the system that owns it. merged_diff_sha256 and base_sha_at_merge are filled in by the runner from the gate's decision (i.e. the sample pretends nothing else merged in between).",
+  "approval": {
+    "approver": "sso:a.reviewer",
+    "approver_team": "team-platform",
+    "approved_at": "2026-11-16T16:40:00Z",
+    "source": "github pull request review 2291840113"
+  },
+  "change": {
+    "pr": "https://github.com/example/homework/pull/42",
+    "merge_commit": "9c1e7a4",
+    "merged_at": "2026-11-16T16:52:10Z",
+    "merged_diff_sha256": null,
+    "base_sha_at_merge": null
+  },
+  "build": {
+    "ci_run": "https://github.com/example/homework/actions/runs/1187",
+    "ci_result": "success",
+    "excluded_tests_at_build": [],
+    "artifact_digest": "sha256:4be1d0c7a2f95e66d3a1b7c9e0f2a4d6b8c0e1f3a5b7c9d1e3f5a7b9c1d3e5f7",
+    "sbom_digest": "sha256:a7f3c2e19b4d5f60718293a4b5c6d7e8f9011223344556677889900aabbccdde",
+    "sbom_package_version": { "PyYAML": "5.4" }
+  },
+  "deployment": {
+    "environment": "production",
+    "deploy_id": "deploy-2026-11-16-0031",
+    "image_digest": "sha256:4be1d0c7a2f95e66d3a1b7c9e0f2a4d6b8c0e1f3a5b7c9d1e3f5a7b9c1d3e5f7",
+    "completed_at": "2026-11-16T17:20:44Z"
+  },
+  "runtime_verification": {
+    "checked_at": "2026-11-17T09:00:00Z",
+    "method": "cluster inventory of running image digests, joined to the SBOM for each digest",
+    "running_digests": ["sha256:4be1d0c7a2f95e66d3a1b7c9e0f2a4d6b8c0e1f3a5b7c9d1e3f5a7b9c1d3e5f7"],
+    "instances_with_vulnerable_version": 0,
+    "previous_vulnerable_digests_running": 0,
+    "rescan": { "scanner": "internal-composition-scan", "finding_status": "resolved" }
+  }
+}

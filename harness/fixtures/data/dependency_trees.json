@@ -1,0 +1,35 @@
+{
+  "_comment": "Stand-in for `mvn dependency:tree` and pip resolution, recorded by hand from the manifests. Versions here are overlaid with what the pom / lockfile actually say at base and head, so only 'relationship' and transitive defaults are taken on trust.",
+  "inventory-api": {
+    "ecosystem": "maven",
+    "manifest": "pom.xml",
+    "packages": {
+      "org.yaml:snakeyaml": {
+        "version": "1.30",
+        "relationship": "transitive",
+        "introduced_by": "org.springframework.boot:spring-boot-starter",
+        "managed_by": "spring-boot-dependencies 2.7.5",
+        "version_property": "snakeyaml.version"
+      },
+      "commons-collections:commons-collections": {
+        "version": "3.2.1",
+        "relationship": "direct",
+        "declared_in_pom": true
+      }
+    }
+  },
+  "report-worker": {
+    "ecosystem": "pip",
+    "manifest": "requirements.lock",
+    "packages": {
+      "PyYAML": { "version": "5.3.1", "relationship": "direct" },
+      "requests": { "version": "2.31.0", "relationship": "direct" },
+      "jinja2": { "version": "3.1.2", "relationship": "direct" },
+      "certifi": { "version": "2024.2.2", "relationship": "transitive" },
+      "charset-normalizer": { "version": "3.3.2", "relationship": "transitive" },
+      "idna": { "version": "3.6", "relationship": "transitive" },
+      "urllib3": { "version": "2.2.1", "relationship": "transitive" },
+      "MarkupSafe": { "version": "2.1.5", "relationship": "transitive" }
+    }
+  }
+}

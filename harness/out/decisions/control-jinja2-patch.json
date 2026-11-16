@@ -1,0 +1,360 @@
+{
+  "record_version": "1.0",
+  "pr": {
+    "id": "control-jinja2-patch",
+    "base_sha": "7d57275",
+    "diff_sha256": "93529e3d283a0443467bf139f4ebc67bb4083248fdca3512294a1c8cd777a0b5",
+    "changed_paths": [
+      {
+        "path": "services/report-worker/requirements.lock",
+        "file_class": "manifest"
+      }
+    ],
+    "services": [
+      "report-worker"
+    ]
+  },
+  "rubric": {
+    "version": "0.4.0",
+    "sha256": "aab00c9fe606c9ff72d6a900da48b9b5435abee1a12570f3e199f7ca1b937b39"
+  },
+  "registries": {
+    "sensitivity": "d811c1ef514c3a8ca40f2adcfee16eef7aa9c899376ba209fb76d65c5edc6a6d",
+    "owners": "9181a5ba0cb81be474e86a4e373f29fce88f5f483d9a2c2f4021088384555f47",
+    "tools": "f74a2fd0b45aade90d0ea3da7e93e795269a55f6cae0621ab8e4df64bdf5dcfd",
+    "prompts": "a1503b61816e7953df88083e93cfd5da72a4b3daa6f7cc78222fba3303303f87"
+  },
+  "decided_at": "2026-11-16T14:00:00Z",
+  "results": [
+    {
+      "id": "G1_weakens_verification",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 test-weakening change(s)",
+      "evidence": []
+    },
+    {
+      "id": "G2_secret_in_diff",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 possible secret(s) added",
+      "evidence": []
+    },
+    {
+      "id": "G3_ships_known_vulnerable_version",
+      "kind": "gate",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 changed package(s) still vulnerable",
+      "evidence": []
+    },
+    {
+      "id": "G4_doc_grants_automation_privilege",
+      "kind": "gate",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in docs"
+    },
+    {
+      "id": "S1_registered_sensitive_area",
+      "kind": "trigger",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "sensitive domains: none",
+      "evidence": []
+    },
+    {
+      "id": "S2_unregistered_sensitive_area",
+      "kind": "trigger",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "7",
+          "contains": "TEMPLATE = Template(",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "7",
+          "contains": "TEMPLATE = Template(",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "7",
+          "contains": "TEMPLATE = Template(",
+          "verified": true
+        }
+      ],
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "cc50560d4ee8a661eb411b178fc3552a6c445d086629499cc398b31e1bef5e08"
+    },
+    {
+      "id": "S3_changes_procedure",
+      "kind": "trigger",
+      "type": "llm_judge",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in docs"
+    },
+    {
+      "id": "D1_not_direct_dependency",
+      "kind": "scored",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 non-direct dependency change(s)",
+      "evidence": [],
+      "weight": 20
+    },
+    {
+      "id": "D2_major_version_jump",
+      "kind": "scored",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 major version jump(s)",
+      "evidence": [],
+      "weight": 20
+    },
+    {
+      "id": "D3_related_test_excluded",
+      "kind": "scored",
+      "type": "static",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "0 related test(s) excluded",
+      "evidence": [],
+      "weight": 30
+    },
+    {
+      "id": "D4_large_change",
+      "kind": "scored",
+      "type": "static",
+      "status": "not_applicable",
+      "counted": false,
+      "effect": null,
+      "detail": "no changed file in source, tests"
+    },
+    {
+      "id": "D5_no_active_owner",
+      "kind": "scored",
+      "type": "static",
+      "status": "fired",
+      "counted": true,
+      "effect": "+10",
+      "detail": "1 unowned area(s)",
+      "evidence": [
+        {
+          "service": "report-worker",
+          "why": "no owner in owners.json"
+        }
+      ],
+      "weight": 10
+    },
+    {
+      "id": "Q1_relied_on_behavior_changes",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "5",
+          "contains": "from jinja2 import Template",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "5",
+          "contains": "from jinja2 import Template",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "5",
+          "contains": "from jinja2 import Template",
+          "verified": true
+        }
+      ],
+      "weight": 30,
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "0b69467069022206fc49b250aeeb18270d992f34e99fb0a6b462794cc1add889"
+    },
+    {
+      "id": "Q2_changed_behavior_untested",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/report-worker/tests/test_config.py",
+          "lines": "7",
+          "contains": "assert \"SKU-1001: 42\" in out",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/tests/test_config.py",
+          "lines": "7",
+          "contains": "assert \"SKU-1001: 42\" in out",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/tests/test_config.py",
+          "lines": "7",
+          "contains": "assert \"SKU-1001: 42\" in out",
+          "verified": true
+        }
+      ],
+      "weight": 25,
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "370bfa27dd252b85122702a5a9fa9362b1b56f4041749f801c7297e58330d0c4"
+    },
+    {
+      "id": "Q3_request_path_or_external_input",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "13",
+          "contains": "def render(tenant: str, rows: list[dict]) -> str:",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "13",
+          "contains": "def render(tenant: str, rows: list[dict]) -> str:",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "13",
+          "contains": "def render(tenant: str, rows: list[dict]) -> str:",
+          "verified": true
+        }
+      ],
+      "weight": 15,
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "58b2ef123a62ca4e79804af0d6d873b5c404a94118e27787c895a9d04c931dc0"
+    },
+    {
+      "id": "Q4_requires_coordinated_change",
+      "kind": "scored",
+      "type": "llm_judge",
+      "status": "clear",
+      "counted": false,
+      "effect": null,
+      "detail": "judge answered 'pass' in 3/3 rollouts",
+      "evidence": [
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "14",
+          "contains": "return TEMPLATE.render(tenant=tenant, rows=rows)",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "14",
+          "contains": "return TEMPLATE.render(tenant=tenant, rows=rows)",
+          "verified": true
+        },
+        {
+          "file": "services/report-worker/report_worker/render.py",
+          "lines": "14",
+          "contains": "return TEMPLATE.render(tenant=tenant, rows=rows)",
+          "verified": true
+        }
+      ],
+      "weight": 20,
+      "rollouts": [
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        },
+        {
+          "result": "pass"
+        }
+      ],
+      "prompt_sha256": "876d9cc4b95b0f621affab581dc2ee9e141f0c548afa3c4d6d1cdf8a4b57d71c"
+    }
+  ],
+  "score": 10,
+  "review_threshold": 20,
+  "outcome": "approve",
+  "lowered_by": [],
+  "record_sha256": "67e8279647ed9e54c2edb69656dde2d8cc7e0109ac1c49e444a0cdd6f3f8952d"
+}

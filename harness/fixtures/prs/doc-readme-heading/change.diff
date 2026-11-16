@@ -1,0 +1,11 @@
+--- a/README.md
++++ b/README.md
+@@ -12,7 +12,7 @@
+ JDK 17 and Maven 3.9+ for the Java service. Python 3.11 for the worker. No wrapper scripts;
+ use your own toolchain.
+ 
+-## Running things
++## Running the tests
+ 
+     cd services/inventory-api
+     mvn test
